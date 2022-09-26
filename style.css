@@ -1,0 +1,249 @@
+*{
+    transition: .3s;
+    margin: 0;
+}
+*:hover,*::after,*::before{
+    transition: .3s;
+}
+
+:root{
+
+    --f-color-lt: rgb(23, 12, 31);
+    --s-color-lt: rgb(242, 223, 255);
+    --btn-color-lt: rgba(248, 155, 252, 0.719);
+    --btn-color-hv-lt: rgba(120, 37, 122, 0.719);
+
+    --bg-form-lt: rgb(7, 1, 26);
+    --bg-input: rgb(45, 34, 46);
+    --color-a: rgb(2, 133, 255);
+    --color-a-hover:  rgb(0, 81, 255);
+
+    --bg-modal:rgba(51, 51, 51, 0.98);
+    
+}
+html.ligth:root{
+    
+    --f-color-lt: rgb(243, 243, 243);
+    --s-color-lt: rgb(65, 65, 65);
+    --btn-color-lt: rgba(57, 120, 255, 0.541);
+    --btn-color-hv-lt: rgba(41, 98, 221, 0.897);
+    
+    --bg-form-lt: rgb(255, 255, 255);
+    --bg-input: rgb(239, 243, 245);
+    --color-input: black;
+
+    --shadow-img: drop-shadow(0px 14px 6px  rgb(179, 179, 179));
+
+    --shadow-bl: 1px 3px 10px rgb(219, 219, 219);
+}
+:root{
+    --border-radius: 5px;
+}
+@font-face {
+    font-family: 'KyivTypeSans';
+    src: url(assets/fonts/KyivTypeSans-VarGX.ttf);
+}
+html,body{
+    background: var(--f-color-lt);
+    color: var(--s-color-lt);
+    font-family: 'KyivTypeSans','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+    top: 0;
+}
+.uk-notification{
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-form-lt);
+    /* filter: invert(0.8); */
+}
+.btn{
+    cursor: pointer;
+}
+.text_color{
+    content: 'Цвет текста: черный';
+}
+.text_color.text_white{
+    content: 'Цвет текста: белый';
+}
+
+.border{
+    content: 'Без рамки';
+}
+.border.border_set{
+    content: 'С рамкой';
+}
+
+header{
+    padding: 20px 0px ;
+}
+header h1{
+    color: var(--s-color-lt);
+    text-align: center;
+}
+header .btn{
+    display: block;
+    width: 40px;
+    height: 40px;
+    background: silver;
+    padding: 5px;
+    border-radius: 30px;
+}
+header .btn:hover{
+    background: white;
+    transform: rotate(15deg);
+}
+header .btn img{
+    background-size: cover;
+}
+
+section{
+    margin-top: 60px;
+}
+.title{
+    width: 40%;
+    margin: 0 auto;
+    text-align: center;
+}
+.title > p{
+    margin-bottom: 0;
+}
+.title form{
+    font-size: 13px;
+}
+.input-file {
+	position: relative;
+	display: inline-block;
+}
+.input-file-text {
+	padding: 0 10px;
+	display: inline-block;
+    color: var( --color-a);
+}
+.input-file-text:hover{
+    color: var(--color-a-hover);
+    text-decoration: underline;
+}
+.input-file input[type=file] {
+	position: absolute;
+	z-index: -1;
+	opacity: 0;
+	display: block;
+	width: 0;
+	height: 0;
+}
+
+.content{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    grid-gap: 30px;
+}
+section .img{
+    display: flex;
+    position: relative;
+    width: 30%;
+    height: 350px;
+    background-size: cover;
+    background-position: center center;
+    filter: brightness(80%);
+    cursor: pointer;
+}
+section .img::after{
+    content: 'делоть меме';
+    margin: auto auto;
+    display: block;
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    background: var(--color-a);
+    width: fit-content;
+    height: 22px;
+    padding: 10px 17px;
+    border-radius: 30px;
+    box-shadow: 0px 0px 15px var(--color-a-hover);
+    opacity: 0;
+    bottom: -70px;
+    position: relative;
+}
+section .img:hover{
+    filter: brightness(100%);
+}
+section .img:hover::after{
+    opacity: 1;
+    bottom: 0;
+}
+textarea{
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.modal{
+    display: none;
+    position: fixed;
+    top: 0;
+    background: var(--bg-modal);
+    width: 90%;
+    height: 90%;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto auto;
+    padding: 40px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+.modal_show{
+    display: block;
+}
+.modal .close{
+    font-size: 20px;
+    width: fit-content;
+    margin-left: auto;
+}
+.modal .work_area{
+    width: 100%;
+    max-height: 100%;
+}
+.modal .img{
+    cursor: pointer;
+    max-width: fit-content;
+    position: relative;
+    margin: 0px auto;
+}
+.modal .img img{
+    margin: auto auto;
+    display: block;
+    max-width: 500px;
+}
+.modal textarea{
+    position: absolute;
+}
+.modal .tools{
+    display: flex;
+    width: fit-content;
+    border: 2px dashed rgb(231, 231, 231);
+}
+.modal .tools.disable > *{
+    cursor: not-allowed;
+    background: var(--btn-color-hv-lt) !important;
+}
+.modal .tools > *{
+    cursor: pointer;
+    padding: 5px 10px;
+    background: var(--btn-color-lt);
+}
+.modal .tools > *:hover{
+    background: var(--btn-color-hv-lt);
+}
+.modal_footer{
+    display: flex;
+    margin-top: 20px;
+}
+.modal_footer .btn{
+    margin-left: 20px;
+    padding: 5px 10px;
+    background: var(--s-color-lt);
+}
