@@ -41,7 +41,7 @@ html.ligth:root{
 }
 @font-face {
     font-family: 'KyivTypeSans';
-    src: url(assets/fonts/KyivTypeSans-VarGX.ttf);
+    src: url(/assets/fonts/KyivTypeSans-VarGX.ttf);
 }
 html,body{
     background: var(--f-color-lt);
@@ -99,17 +99,17 @@ header .btn img{
 }
 
 section{
-    margin-top: 60px;
+    margin: 60px auto;
 }
-.title{
+section .title{
     width: 40%;
     margin: 0 auto;
     text-align: center;
 }
-.title > p{
+section .title > p{
     margin-bottom: 0;
 }
-.title form{
+section .title form{
     font-size: 13px;
 }
 .input-file {
@@ -203,9 +203,16 @@ textarea{
     width: fit-content;
     margin-left: auto;
 }
+.modal .slider{
+    display: flex;
+}
 .modal .work_area{
     width: 100%;
     max-height: 100%;
+}
+.modal .response{
+    display: none;
+    width: 100%;
 }
 .modal .img{
     cursor: pointer;
@@ -246,4 +253,20 @@ textarea{
     margin-left: 20px;
     padding: 5px 10px;
     background: var(--s-color-lt);
+}
+
+footer .title{
+    display: flex;
+    justify-content: space-between;
+}
+footer .title *{
+    color: var( --s-color-lt);
+}
+footer .list_mems{
+    display: flex;
+    overflow: hidden;
+}
+footer .list_mems img{
+    width: 10%;
+    display: block;
 }

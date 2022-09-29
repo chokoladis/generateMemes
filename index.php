@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gen.meme</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/uikit@3.15.9/dist/css/uikit.min.css" />
-    <link rel="stylesheet" href="assets/font-awesome/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
-   
+    <link rel="stylesheet" href="/assets/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="/style/style.css">
 </head>
 <body>
+    <? $mems = 0;?>
    <header>
     <div class="uk-container">
         <h1>Суперпупермегаультрасексипушкабомба генератор мемов 2022</h1>
@@ -53,9 +53,15 @@
             <i class="fas fa-times"></i>
         </div>
         <form action="createImg.php" method="psot">
-            <div class="work_area">
-                 <div class="img"></div>
+            <div class="slider">
+                <div class="work_area">
+                    <div class="img"></div>
+                </div>
+                <div class="response">
+
+                </div>
             </div>
+            
             <div class="modal_footer">
                 <div class="tools disable">
                     <div class="text_color text_white">
@@ -72,6 +78,31 @@
             </form>
     </div>
 
+    <footer>
+        <div class="uk-container">
+            <?
+                $dir = 'D:\installed\OSPanel\domains\localhost\historylog\temp';
+                $historyDir = scandir($dir);
+                $files = count($historyDir);
+            ?>
+            <div class="title">
+                <h2>История использования</h2>
+                <p>смемлено <?=$files?>  мемов</p>
+            </div>
+            <div class="list_mems">
+                <?
+                    $j = 0;
+                    foreach ($historyDir as $file){
+                        if ($j > 1){
+                            echo "<img src='\historylog\/temp\/".$file."'/>";
+                        }
+                        
+                        $j++;
+                    }
+                ?>
+            </div>
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.9/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.9/dist/js/uikit-icons.min.js"></script>

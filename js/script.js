@@ -3,8 +3,6 @@
 function modal(param){
    
   var bg_src = null;
-  console.log(param);
-  console.log(typeof(param));
   if (typeof(param) == 'string'){
     bg_src = 'img/'+param;
     console.log(bg_src);  
@@ -17,13 +15,6 @@ function modal(param){
   // $('.modal .img').css('background-image','url('+bg_src+')');
   $('.modal .img').empty();
   $('.modal .img').append('<img src="'+bg_src+'"/>');
-
-  // UIkit.notification({
-  //   message: 'Заполните строку поиска',
-  //   status: 'primary',
-  //   pos: 'bottom-left',
-  //   timeout: 4000
-  // });
 }
 
 function addInput(id,posX,posY){
@@ -162,6 +153,15 @@ $('.generate.btn').on('click', function(){
   // console.log(img);
   let arr_text = [];
 
+  if ($('.modal textarea').length < 1){
+    UIkit.notification({
+      message: 'У вас нет текстовых полей, что генерировать то? (:',
+      status: 'warning',
+      pos: 'bottom-left',
+      timeout: 4000
+    });
+    return false;
+  }
   for ( let text of $('.modal textarea')){
     text = {
       y: text.offsetTop,
@@ -184,7 +184,7 @@ $('.generate.btn').on('click', function(){
     opts
   };
 
-  console.log(send_data);  
+  // console.log(send_data);  
 
   $.ajax({
     url:'createImg.php',
@@ -193,8 +193,18 @@ $('.generate.btn').on('click', function(){
     dataType: 'html',
     // contentType: "application/json",
     success: function(data){
-      
       console.log(data);
+      let response = JSON.parse(data);
+      console.log(response);
+
+      $('.slider .response').empty();
+      if (response.status == 'ok'){
+        console.log('success');
+        console.log(response.data);
+        $('.slider .response').append('<img src="'+response.data+'"/>');
+        $('.slider .response').css('display','block');
+      }
+
     }
   })
 });

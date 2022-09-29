@@ -12,6 +12,40 @@
 //     } 
 // }
 
+$response = '';
+
+function getName($n = 8) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+ 
+    for ($i = 0; $i < $n; $i++) {
+        $index = rand(0, strlen($characters) - 1);
+        $randomString .= $characters[$index];
+    }
+
+    return $randomString;
+}
+
+function addHistory($opts){
+
+    $img = $opts['img_source'];
+
+    $nameFile = getName();
+
+    imagejpeg($img, 'D:\installed\OSPanel\domains\localhost\historylog\temp\t' .$nameFile. '.jpeg', '40%');
+
+    $params = [
+        'img_source' => $thumb, 
+        'text_source' => $resImgText,
+        'posX' => $posX,
+        'posY' => $posY, 
+        'imgX' => 0,
+        'imgY' => 0,
+        'width' => $width,
+        'heigth' => $heigth
+    ];
+}
+
 function clear_dir($dir, $rmdir = false)
 {
 	if ($objs = glob($dir . '/*')) {
@@ -23,7 +57,6 @@ function clear_dir($dir, $rmdir = false)
 		rmdir($dir);
 	}
 }
- 
 
 function textToImg($stockText, $opts, $w, $h, $i){
     
@@ -44,7 +77,7 @@ function textToImg($stockText, $opts, $w, $h, $i){
 
     $font = "D:\installed\OSPanel\domains\localhost\arial.ttf";
 
-    var_dump($textColor);
+    // var_dump($textColor);
 
     // Create some colors
     $setColor = imagecolorallocate($image, $textColor[0], $textColor[1] ,$textColor[2]);
@@ -71,6 +104,7 @@ $imgH = $arrImg['h_client'];
 $opts = $_POST['opts'];
 
 $index = 0;
+$n = count($arrText);
 foreach( $arrText as $text ){
 
     $posX = $text['x'];
@@ -111,8 +145,8 @@ foreach( $arrText as $text ){
     }
    
     $prevI = $index - 1;
-    if (file_exists('success_meme'.$prevI.'.jpeg')){
-        $thumb = imagecreatefromjpeg('success_meme'.$prevI.'.jpeg');
+    if (file_exists('custom_meme'.$prevI.'.jpeg')){
+        $thumb = imagecreatefromjpeg('custom_meme'.$prevI.'.jpeg');
     } else{
         $thumb = imagecreatefromjpeg($resizeImg);
     }
@@ -120,17 +154,32 @@ foreach( $arrText as $text ){
    
     // Альтернатива без ресайза
     // $prevI = $index - 1;
-    // if (file_exists('success_meme'.$prevI.'.jpeg')){
-    //     $thumb = imagecreatefromjpeg('success_meme'.$prevI.'.jpeg');
+    // if (file_exists('custom_meme'.$prevI.'.jpeg')){
+    //     $thumb = imagecreatefromjpeg('custom_meme'.$prevI.'.jpeg');
     // } else{
     //     $thumb = imagecreatefromjpeg($imgSrc);
     // }   
 
     imagecopy($thumb, $resImgText, $posX, $posY, 0, 0, $width, $heigth);
 
-    $place_save = 'success_meme'.$index.'.jpeg';
+    $place_save = 'custom_meme'.$index.'.jpeg';
     if (imagejpeg($thumb, $place_save)){
-        echo 'success_meme'.$index.'.jpeg';
+        // output response
+        $response .= 'custom_meme.jpeg';
+
+        // create historyLog cell
+        $params = [
+            'img_source' => $thumb, 
+            'text_source' => $resImgText,
+            'posX' => $posX,
+            'posY' => $posY, 
+            'imgX' => 0,
+            'imgY' => 0,
+            'width' => $width,
+            'heigth' => $heigth
+        ];
+
+        addHistory($params);
     }
 
     imagedestroy($thumb);
@@ -138,6 +187,11 @@ foreach( $arrText as $text ){
     $index++;
 }
 
+if ($response != ''){
+    echo '{ "status": "ok", "data": "'.$response.'"}';
+} else {
+    echo '{ "status": "error", "data": "error in output data"}';
+}
 
 $dir =  'temp';
 clear_dir($dir);
