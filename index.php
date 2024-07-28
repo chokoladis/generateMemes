@@ -1,4 +1,11 @@
-<? require_once(THEMPLATE_DIR.'header.php'); ?>
+<?
+
+require_once($_SERVER['DOCUMENT_ROOT'].'/lib/preloader.php');
+require_once(THEMPLATE_DIR.'header.php'); 
+
+use Main\Classes\Helper;
+
+?>
     <section class="main">
         <div class="uk-container">
             <div class="title">
@@ -14,10 +21,22 @@
             </div>
             <div class="content">
                 <? 
-                    foreach ($arImg as $value) {
-                        ?><div class="img">
-                            <img src="" data-src="" alt="">
-                        </div><?
+                
+                    $files = Helper::searchOriginalImg();
+                
+                    if (!empty($files)){
+                        foreach ($files as $file) {
+                            $path = ORIGINAL_IMG_DIR.$file;
+                            ?>
+                            <div class="img">
+                                <img src="<?=$path?>" data-src="<?=$path?>" alt="">
+                            </div>
+                            <?
+                        }
+                    } else {
+                        ?>
+                        <p class="alert-warning">Нету картинок для мемов</p>
+                        <?
                     }
                 ?>
             </div>
@@ -28,7 +47,7 @@
         <div class="btn close">
             <i class="fas fa-times"></i>
         </div>
-        <form action="createImg.php" method="psot">
+        <form action="/ajax/createImg.php" method="post">
             <div class="work_area">
                  <div class="img"></div>
             </div>

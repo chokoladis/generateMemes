@@ -1,0 +1,41 @@
+сделать сохранения запросов на создание картинок
+{
+    id
+
+    ip_address
+    created_at
+}
+авторизация, регистрация, забыл пароль
+{
+    id
+    email*
+    password*
+    fio*
+    phone
+    photo
+    registration_date
+}
+мемы сделанные реганными пользователями
+{
+    id
+    active
+    user_id
+    path
+    description
+    created_at
+}
+статистика мемов - просмотры
+{
+    id
+    mem_id
+    view_count
+}
+статистика мемов - лайки
+{
+    id
+    mem_id
+    user_id
+    status -1 1
+}
+
+форматы png, webp

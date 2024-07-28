@@ -46,7 +46,7 @@ html.ligth:root{
 html,body{
     background: var(--f-color-lt);
     color: var(--s-color-lt);
-    font-family: 'KyivTypeSans','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    /* font-family: 'KyivTypeSans','Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
     font-weight: 400;
     margin: 0;
     padding: 0;
@@ -143,12 +143,14 @@ section{
 section .img{
     display: flex;
     position: relative;
-    width: 30%;
-    height: 350px;
-    background-size: cover;
-    background-position: center center;
+    width: 380px;
+    height: 380px;
     filter: brightness(80%);
     cursor: pointer;
+}
+section .img img{
+    width: 100%;
+    object-fit: fill;
 }
 section .img::after{
     content: 'делоть меме';
@@ -165,8 +167,11 @@ section .img::after{
     border-radius: 30px;
     box-shadow: 0px 0px 15px var(--color-a-hover);
     opacity: 0;
-    bottom: -70px;
-    position: relative;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    position: absolute;
 }
 section .img:hover{
     filter: brightness(100%);
@@ -246,4 +251,22 @@ textarea{
     margin-left: 20px;
     padding: 5px 10px;
     background: var(--s-color-lt);
+}
+
+footer{
+    padding: 50px 0;
+}
+
+footer ul li{
+    font-size: 14px;
+}
+footer .copyright{
+    text-align: center;
+    font-size: 12px;
+}
+
+@media screen and (max-width:1280px) {
+    section .img{
+        width: 300px;
+    }
 }

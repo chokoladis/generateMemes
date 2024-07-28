@@ -17,11 +17,11 @@ Class Img{
         }
     }
 
-    public function clear_dir($dir, $rmdir = false)
+    public static function clearDir($dir, $rmdir = false)
     {
         if ($objs = glob($dir . '/*')) {
             foreach($objs as $obj) {
-                is_dir($obj) ? self::clear_dir($obj, true) : unlink($obj);
+                is_dir($obj) ? self::clearDir($obj, true) : unlink($obj);
             }
         }
         if ($rmdir) {
@@ -46,9 +46,9 @@ Class Img{
         //     self::drawBorder($image, $w, $h, $borderColor, 2);
         // }   
     
-        $font = "arial.ttf";
+        $font = ROOT_DIR."/assets/fonts/arial.ttf";
     
-        var_dump($textColor);
+        // var_dump($textColor);
     
         // Create some colors
         $setColor = imagecolorallocate($image, $textColor[0], $textColor[1] ,$textColor[2]);
@@ -61,7 +61,7 @@ Class Img{
     
         header('Content-Type: image/png; charset=utf-8');
         // Using imagepng() results in clearer text compared with imagejpeg()
-        imagepng($image, 'temp/temp_text_'.$i.'.png');
+        imagepng($image, ROOT_DIR.TEMP_IMG_DIR.'temp_text_'.$i.'.png');
     }
     
 
