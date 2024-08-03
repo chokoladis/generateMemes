@@ -5,75 +5,34 @@
 
     $img = new Img();
 
-    // clear values
-    $arrImg = $_POST['img'];
-    $arrText = $_POST['arText'];
-
-    $imgSrc = ROOT_DIR.$arrImg['src'];
-    $imgW = $arrImg['w_client'];
-    $imgH = $arrImg['h_client'];
-
-    $opts = $_POST['opts'];
-
-    $index = strtotime('now');
-    foreach( $arrText as $text ){
-
-        $posX = $text['x'];
-        $posY = $text['y'];
-        $width = $text['w'];
-        $heigth = $text['h'];
-        $width += 60;
-        $heigth += 10;
-        $value = $text['value'];
+    $arValues = $img->handlerPostValues();
+    $arImg = $arValues['resImg'];
+    $arText = $arValues['resText'];
+    $opts = $arValues['options'];
+    
+    $index = strtotime('now'); // + random string
+    foreach( $arText as $text ){
         
-        $img->textToImg($value, $opts, $width, $heigth, $index);
-
-        $resImgText = imagecreatefrompng(ROOT_DIR.TEMP_IMG_DIR.'temp_text_'.$index.'.png');
+        if ($img->textToImg($arText['value'], $opts, $arText['width'], $arText['heigth'], $index)){
+            $resImgText = imagecreatefrompng(ROOT_DIR.TEMP_IMG_DIR.'temp_text_'.$index.'.png');
+        } else {
+            return jsonResponse(false, errors: ['write_text_img' => 'Ошибка при вносе текста на картинку']);
+        }
         
         // функция изменения размера
-    
-        if (!file_exists(ROOT_DIR.TEMP_IMG_DIR.'resize_img0.jpeg')){
-            header('Content-Type: image/jpeg');
-
-            // получение страых и новых размеров
-            list($oldW, $oldH) = getimagesize($imgSrc);
-        
-            if ($imgW == $oldW && $imgH == $oldH){
-                $resizeImg = $imgSrc;
-            } else {
-                // загрузка
-                $thumb = imagecreatetruecolor($imgW, $imgH);
-                $source = imagecreatefromjpeg($imgSrc);
-            
-                // изменение размера
-                imagecopyresized($thumb, $source, 0, 0, 0, 0, $imgW, $imgH, $oldW, $oldH);
-                imagejpeg($thumb, ROOT_DIR.TEMP_IMG_DIR.'resize_img'.$index.'.jpeg');
-                $resizeImg = TEMP_IMG_DIR.'resize_img'.$index.'.jpeg';
-            }
-            
-        } else {
-            $resizeImg = TEMP_IMG_DIR.'resize_img0.jpeg';
-        }
-    
-        $prevI = $index - 1;
-        if (file_exists(GENERATED_IMG_DIR.'success_meme'.$prevI.'.jpeg')){
-            $thumb = imagecreatefromjpeg(GENERATED_IMG_DIR.'success_meme'.$prevI.'.jpeg');
-        } else{
-            $thumb = imagecreatefromjpeg(ROOT_DIR.$resizeImg);
-        }
-
+        // $img->createThumb();
     
         // // Альтернатива без ресайза
-        // // $prevI = $index - 1;
-        // // if (file_exists('success_meme'.$prevI.'.jpeg')){
-        // //     $thumb = imagecreatefromjpeg('success_meme'.$prevI.'.jpeg');
-        // // } else{
-        // //     $thumb = imagecreatefromjpeg($imgSrc);
-        // // }   
+        $prevI = $index - 1;
+        if (file_exists(ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$prevI.'.jpeg')){
+            $thumb = imagecreatefromjpeg(ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$prevI.'.jpeg');
+        } else{
+            $thumb = imagecreatefromjpeg($arImg['src']);
+        }   
 
-        imagecopy($thumb, $resImgText, $posX, $posY, 0, 0, $width, $heigth);
+        // imagecopy($thumb, $resImgText, $posX, $posY, 0, 0, $width, $heigth);
 
-        $place_save = ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$index.'.jpeg';
+        $place_save = ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$index.'.png';
         if (imagejpeg($thumb, $place_save)){
             $response = [
                 'success' => true,

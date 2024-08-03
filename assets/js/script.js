@@ -144,8 +144,6 @@ $(function(){
       src: select_meme.attr('src'),
       h_client: select_meme[0].clientHeight,
       w_client: select_meme[0].clientWidth,
-      h_real: select_meme[0].naturalHeight,
-      w_real: select_meme[0].naturalWidth
     };
     
     let arText = [];

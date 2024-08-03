@@ -16,7 +16,9 @@ class Helper{
     }
 
     static function secureInput(string $value){
-        
+        $value = addslashes($value);
+        $value = strip_tags($value);
+        $value = htmlspecialchars($value);
         return $value;
     }
 }
