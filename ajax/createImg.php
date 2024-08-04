@@ -2,6 +2,7 @@
     require_once($_SERVER['DOCUMENT_ROOT'].'/lib/preloader.php');
 
     use Main\Classes\Img;
+    use Main\Classes\Helper;
 
     $img = new Img();
 
@@ -10,30 +11,49 @@
     $arText = $arValues['resText'];
     $opts = $arValues['options'];
     
-    $index = strtotime('now'); // + random string
+    $ip = Helper::getIp() ?? md5(rand(10000,99999));
+    $mainDir = ROOT_DIR.GENERATED_IMG_DIR;
+    $subDir = md5(strtotime('now').$ip); // 'sail'.rand(10,500)
+    $i = 1;
+
+    if (file_exists($mainDir.$subDir) && is_dir($mainDir.$subDir)){
+        Img::clearDir($mainDir.$subDir);
+    } else {
+        mkdir($mainDir.$subDir);
+    }
+
     foreach( $arText as $text ){
-        
-        if ($img->textToImg($arText['value'], $opts, $arText['width'], $arText['heigth'], $index)){
-            $resImgText = imagecreatefrompng(ROOT_DIR.TEMP_IMG_DIR.'temp_text_'.$index.'.png');
+
+        $arRes = $img->textToImg($text['value'], $opts, $text['width'], $text['heigth'], $subDir);
+
+        if ($arRes['success']){
+            $resImgText = imagecreatefrompng($arRes['temp_name']);
         } else {
             return jsonResponse(false, errors: ['write_text_img' => 'Ошибка при вносе текста на картинку']);
         }
         
+        
+
         // функция изменения размера
         // $img->createThumb();
     
-        // // Альтернатива без ресайза
-        $prevI = $index - 1;
-        if (file_exists(ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$prevI.'.jpeg')){
-            $thumb = imagecreatefromjpeg(ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$prevI.'.jpeg');
-        } else{
-            $thumb = imagecreatefromjpeg($arImg['src']);
+        $method = 'imagecreatefrom'.$arImg['ext'];
+        if (!function_exists($method)){
+            $method = 'imagecreatefromjpeg';
+        }
+
+        // Альтернатива без ресайза
+        $prev = $i - 1;
+        if (file_exists($mainDir.'success_meme'.$prev.'.png')){ // prev
+            $thumb = imagecreatefrompng($mainDir.'success_meme'.$prev.'.png');
+        } else {
+            $thumb = $method($arImg['src']);
         }   
 
         // imagecopy($thumb, $resImgText, $posX, $posY, 0, 0, $width, $heigth);
 
-        $place_save = ROOT_DIR.GENERATED_IMG_DIR.'success_meme'.$index.'.png';
-        if (imagejpeg($thumb, $place_save)){
+        $place_save = $mainDir.'success_meme'.$i.'.png';
+        if (imagepng($thumb, $place_save)){
             $response = [
                 'success' => true,
                 'result' => $place_save
@@ -45,11 +65,13 @@
             ];
         }
 
+
         imagedestroy($thumb);
 
-        $index++;
+        $i++;
     }
 
+    // Img::clearDir($mainDir.$subDir, true);
 
-    Img::clearDir(TEMP_IMG_DIR);
+    return $response;
 ?>

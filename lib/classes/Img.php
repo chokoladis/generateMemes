@@ -17,7 +17,7 @@ Class Img{
         $filePath = ROOT_DIR.$arImg['src'];
         
         $resImg = [
-            'src' => ROOT_DIR.$arImg['src'], // todo
+            'src' => ROOT_DIR.$arImg['src'], // todo handler
             'ext' => pathinfo($filePath, PATHINFO_EXTENSION),
             'size' => filesize($filePath),
             'imgW' => intval($arImg['w_client']),
@@ -92,19 +92,18 @@ Class Img{
         
             $font = ROOT_DIR."/assets/fonts/arial.ttf";
         
-            // Create some colors
             $setColor = imagecolorallocate($image, $textColor[0], $textColor[1] ,$textColor[2]);
             $grey = imagecolorallocate($image, 128, 128, 128);
-            // Add some shadow to the text
-            imagettftext($image, 16, 0, 11, 21, $grey, $font, $stockText);
-        
-            // Add the text
-            imagettftext($image, 16, 0, 10, 20, $setColor, $font, $stockText);
-        
-            header('Content-Type: image/png; charset=utf-8');
+            imagettftext($image, 16, 0, 11, 21, $grey, $font, $stockText); // тень
+            imagettftext($image, 16, 0, 10, 20, $setColor, $font, $stockText); // текст
+
+            // header('Content-Type: image/png; charset=utf-8');
             
-            // start todo here
-            return imagepng($image, ROOT_DIR.TEMP_IMG_DIR.'temp_text_'.$i.'.png');
+            $imgTextName = 'img_text_'.$i.'.png';
+            $imgTextPath = ROOT_DIR.TEMP_IMG_DIR. $imgTextName;            
+
+            $imgTextWrite = imagepng($image, $imgTextPath);
+            return ['success' => $imgTextWrite, 'temp_name' => $imgTextPath];
 
         } catch (\Throwable $th){
             throw $th;
