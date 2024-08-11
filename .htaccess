@@ -3,6 +3,10 @@ php_flag display_errors on
 php_flag html_errors on
 php_flag log_errors on
 
+#AuthType Basic
+#AuthName "Protected Area"
+#AuthUserFile /protected/.htpasswd
+#Require valid-user
 
 RewriteBase /
 RewriteCond %{THE_REQUEST} ^.*/index.php 

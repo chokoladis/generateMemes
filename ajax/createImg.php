@@ -13,7 +13,8 @@
     
     $ip = Helper::getIp() ?? md5(rand(10000,99999));
     $mainDir = ROOT_DIR.GENERATED_IMG_DIR;
-    $subDir = md5(strtotime('now').$ip); // 'sail'.rand(10,500)
+    // $subDir = md5(strtotime('now').$ip); // 'sail'.rand(10,500)
+    $subDir = md5($ip);
     $i = 1;
 
     if (file_exists($mainDir.$subDir) && is_dir($mainDir.$subDir)){
@@ -32,7 +33,6 @@
             return jsonResponse(false, errors: ['write_text_img' => 'Ошибка при вносе текста на картинку']);
         }
         
-        
 
         // функция изменения размера
         // $img->createThumb();
@@ -44,8 +44,8 @@
 
         // Альтернатива без ресайза
         $prev = $i - 1;
-        if (file_exists($mainDir.'success_meme'.$prev.'.png')){ // prev
-            $thumb = imagecreatefrompng($mainDir.'success_meme'.$prev.'.png');
+        if (file_exists($mainDir.'part_meme_'.$prev.'.png')){ // prev
+            $thumb = imagecreatefrompng($mainDir.'part_meme_'.$prev.'.png');
         } else {
             $thumb = $method($arImg['src']);
         }   
