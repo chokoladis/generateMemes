@@ -17,7 +17,7 @@ Class Img{
         $filePath = ROOT_DIR.$arImg['src'];
         
         $resImg = [
-            'src' => ROOT_DIR.$arImg['src'], // todo handler
+            'src' => $filePath, // todo handler
             'ext' => pathinfo($filePath, PATHINFO_EXTENSION),
             'size' => filesize($filePath),
             'imgW' => intval($arImg['w_client']),
@@ -72,7 +72,7 @@ Class Img{
         }
     }
 
-    public function textToImg($stockText, $opts, $w, $h, $i){
+    public function textToImg($stockText, $opts, $w, $h, $subDir, $i){
         
         try {
             $textColor = explode(',', $opts['text_color']);
@@ -85,10 +85,10 @@ Class Img{
             imagesavealpha($image, true);
             imagefill($image,0,0,0x7fff0000);
             
-            // if ($border == true){
-            //     $borderColor = imagecolorallocate($image, $textColor[0], $textColor[1] ,$textColor[2]);
-            //     self::drawBorder($image, $w, $h, $borderColor, 2);
-            // }   
+            if ($border == true){
+                $borderColor = imagecolorallocate($image, $textColor[0], $textColor[1] ,$textColor[2]);
+                self::drawBorder($image, $w, $h, $borderColor, 2);
+            }   
         
             $font = ROOT_DIR."/assets/fonts/arial.ttf";
         
@@ -98,9 +98,11 @@ Class Img{
             imagettftext($image, 16, 0, 10, 20, $setColor, $font, $stockText); // текст
 
             // header('Content-Type: image/png; charset=utf-8');
-            
+
+            $tempDir = ROOT_DIR.TEMP_IMG_DIR;
+
             $imgTextName = 'img_text_'.$i.'.png';
-            $imgTextPath = ROOT_DIR.TEMP_IMG_DIR. $imgTextName;            
+            $imgTextPath = $tempDir.$subDir.$imgTextName;            
 
             $imgTextWrite = imagepng($image, $imgTextPath);
             return ['success' => $imgTextWrite, 'temp_name' => $imgTextPath];
@@ -110,39 +112,66 @@ Class Img{
         }
     }
 
-    public function createThumb(){
+    public function setResizeThumb(array $arImg, string $pathdir, int $i){
 
-        // if (!file_exists(ROOT_DIR.TEMP_IMG_DIR.'resize_img0.png')){
-        //     header('Content-Type: image/jpeg');
+        $imgSrc = $arImg['src'];
 
-        //     // получение страых и новых размеров
-        //     list($oldW, $oldH) = getimagesize($imgSrc);
+        if (!file_exists($pathdir.'resize_img.png')){
+            // header('Content-Type: image/jpeg');
+
+            // получение страых и новых размеров
+            list($oldW, $oldH) = getimagesize($imgSrc);
+            
+            $imgW = $arImg['imgW'];
+            $imgH = $arImg['imgH'];
         
-        //     if ($imgW == $oldW && $imgH == $oldH){
-        //         $resizeImg = $imgSrc;
-        //     } else {
-        //         // загрузка
-        //         $thumb = imagecreatetruecolor($imgW, $imgH);
-        //         $source = imagecreatefromjpeg($imgSrc);
+            if ($imgW == $oldW && $imgH == $oldH){
+                $resizeImg = $imgSrc;
+            } else {
+                // загрузка
+                $thumb = imagecreatetruecolor($imgW, $imgH);
+                $source = imagecreatefromjpeg($imgSrc);
             
-        //         // изменение размера
-        //         imagecopyresized($thumb, $source, 0, 0, 0, 0, $imgW, $imgH, $oldW, $oldH);
-        //         imagejpeg($thumb, ROOT_DIR.TEMP_IMG_DIR.'resize_img'.$index.'.png');
-        //         $resizeImg = TEMP_IMG_DIR.'resize_img'.$index.'.png';
-        //     }
+                // изменение размера
+                imagecopyresized($thumb, $source, 0, 0, 0, 0, $imgW, $imgH, $oldW, $oldH);
+                
+                $resizeImg = $pathdir.'resize_img.png';
+                imagejpeg($thumb, $resizeImg);
+            }
             
-        // } else {
-        //     $resizeImg = TEMP_IMG_DIR.'resize_img0.png';
-        // }
+        } else {
+            $resizeImg = $pathdir.'resize_img.png';
+        }
 
-        // $prevI = $index - 1;
-        // if (file_exists(GENERATED_IMG_DIR.'success_meme'.$prevI.'.png')){
-        //     $thumb = imagecreatefromjpeg(GENERATED_IMG_DIR.'success_meme'.$prevI.'.png');
-        // } else{
-        //     $thumb = imagecreatefromjpeg(ROOT_DIR.$resizeImg);
-        // }
+        return $resizeImg;
     }
     
+    public function getMethod(string $ext){
+        
+        $method = 'imagecreatefrom'.$ext;
+
+        if (!function_exists($method)){
+            $method = 'imagecreatefromjpeg';
+        }
+
+        return $method;
+    }
+
+    public function makeSubdir(string $subDir){
+
+        $mainDir = ROOT_DIR.GENERATED_IMG_DIR;
+        $tempDir = ROOT_DIR.TEMP_IMG_DIR;
+
+        if (file_exists($mainDir.$subDir) && is_dir($mainDir.$subDir)){
+            self::clearDir($mainDir.$subDir);
+        } else {
+            mkdir($mainDir.$subDir);
+        }
+        
+        if (!file_exists($tempDir.$subDir)){
+            mkdir($tempDir.$subDir);
+        }
+    }
 
 }
  

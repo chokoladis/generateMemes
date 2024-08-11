@@ -7,25 +7,27 @@
     $img = new Img();
 
     $arValues = $img->handlerPostValues();
+
     $arImg = $arValues['resImg'];
     $arText = $arValues['resText'];
     $opts = $arValues['options'];
     
     $ip = Helper::getIp() ?? md5(rand(10000,99999));
     $mainDir = ROOT_DIR.GENERATED_IMG_DIR;
+    $tempDir = ROOT_DIR.TEMP_IMG_DIR;
     // $subDir = md5(strtotime('now').$ip); // 'sail'.rand(10,500)
-    $subDir = md5($ip);
+    $subDir = md5($ip).'/';
+    $finalPathImg = '';
     $i = 1;
 
-    if (file_exists($mainDir.$subDir) && is_dir($mainDir.$subDir)){
-        Img::clearDir($mainDir.$subDir);
-    } else {
-        mkdir($mainDir.$subDir);
-    }
+    $img->makeSubdir($subDir);
 
-    foreach( $arText as $text ){
+    foreach( $arText as $key => $text ){
 
-        $arRes = $img->textToImg($text['value'], $opts, $text['width'], $text['heigth'], $subDir);
+        // var_dump($subDir);
+        $arRes = $img->textToImg($text['value'], $opts, $text['width'], $text['heigth'], $subDir, $i);
+        // var_dump($arRes);
+        // exit;
 
         if ($arRes['success']){
             $resImgText = imagecreatefrompng($arRes['temp_name']);
@@ -35,28 +37,34 @@
         
 
         // функция изменения размера
-        // $img->createThumb();
-    
-        $method = 'imagecreatefrom'.$arImg['ext'];
-        if (!function_exists($method)){
-            $method = 'imagecreatefromjpeg';
-        }
+        $resizeImg = $img->setResizeThumb($arImg, $tempDir.$subDir, $i);
+        $method = $img->getMethod($arImg['ext']);
 
         // Альтернатива без ресайза
         $prev = $i - 1;
-        if (file_exists($mainDir.'part_meme_'.$prev.'.png')){ // prev
-            $thumb = imagecreatefrompng($mainDir.'part_meme_'.$prev.'.png');
+        $partMemePath = $tempDir.$subDir.'part_meme_'.$prev.'.png';
+        if (file_exists($partMemePath)){ // prev
+            $thumb = imagecreatefrompng($partMemePath);
         } else {
-            $thumb = $method($arImg['src']);
+            // $thumb = $method($arImg['src']);
+            $thumb = $method($resizeImg);
         }   
 
-        // imagecopy($thumb, $resImgText, $posX, $posY, 0, 0, $width, $heigth);
-
-        $place_save = $mainDir.'success_meme'.$i.'.png';
+        if (!imagecopy($thumb, $resImgText, $text['posX'], $text['posY'], 0, 0, $text['width'], $text['heigth'])){
+            return jsonResponse(false, errors: ['copy_text_img' => 'Системная ошибка при копировании картинки']);
+        }
+        
+        if (array_key_last($arText) == $key){
+            $finalPathImg = $subDir.'meme_'.time().'.png';
+            $place_save = $mainDir.$finalPathImg;
+        } else {
+            $place_save = $tempDir.$subDir.'part_meme_'.$i.'.png';
+        }
+        
         if (imagepng($thumb, $place_save)){
             $response = [
                 'success' => true,
-                'result' => $place_save
+                'result' => GENERATED_IMG_DIR.$finalPathImg
             ];
         } else {
             $response = [
@@ -66,12 +74,14 @@
         }
 
 
-        imagedestroy($thumb);
+        // imagedestroy($thumb);
 
         $i++;
     }
 
-    // Img::clearDir($mainDir.$subDir, true);
+    Img::clearDir($tempDir.$subDir, true);
 
-    return $response;
+    header('Content-type: application/json; charset=utf-8');
+
+    echo json_encode($response, JSON_UNESCAPED_SLASHES);
 ?>

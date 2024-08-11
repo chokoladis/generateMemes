@@ -1,21 +1,22 @@
 // функции
 
-function modal(param){
+function modal(modal, param){
    
   var bg_src = null;
   if (typeof(param) == 'string'){
     bg_src = 'img/'+param;
-    console.log(bg_src);  
   } else {
     bg_src = $(param).find('img').attr('data-src');
   }
-  console.log(bg_src);
+  // console.log(bg_src);
   
 
-  $('.modal').addClass('modal_show');
+  UIkit.modal(modal).show();
   // $('.modal .img').css('background-image','url('+bg_src+')');
-  $('.modal .img').empty();
-  $('.modal .img').append('<img src="'+bg_src+'"/>');
+  $(modal).find('.img').empty();
+  $(modal).find('.img').append('<img src="'+bg_src+'"/>');
+
+  UIkit.modal(modal).show();
 
   // UIkit.notification({
   //   message: 'Заполните строку поиска',
@@ -43,11 +44,11 @@ function checkInputCreated(){
 // Обработчики событий
 $(function(){
   $('.main #file').change(() => {
-    modal($("#file")[0].files[0].name);
+    modal('#modal-create-meme', $("#file")[0].files[0].name);
   });
   
   $('.main .img').on('click', function(){
-    modal($(this));
+    modal('#modal-create-meme', $(this));
   });
   
   $('.modal .close').on('click', () => {
@@ -176,10 +177,22 @@ $(function(){
       url:'/ajax/createImg.php',
       method: 'post',
       data: send_data,
-      // dataType: 'json',
-      // contentType: "application/json",
-      success: function(data){
-        console.log(data);
+      success: function(json){
+        console.log(json);
+        
+        $('#modal-new-meme').find('p').removeClass();
+
+        if (json.success){
+          $('#modal-new-meme').find('img').attr('src', json.result);
+          $('#modal-new-meme').find('p').addClass('success');
+          $('#modal-new-meme').find('p').text('Ваш мем готов, сохраните к себе на устройство.');
+          UIkit.modal('#modal-create-meme').hide();
+        } else {
+          $('#modal-new-meme').find('p').addClass('error');
+          $('#modal-new-meme').find('p').text(json.error);
+        }
+
+        UIkit.modal('#modal-new-meme').show();
       }
     })
   });

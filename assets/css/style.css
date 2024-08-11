@@ -217,6 +217,7 @@ textarea{
     max-width: fit-content;
     position: relative;
     margin: 0px auto;
+    border: 2px solid rgb(0, 60, 255);
 }
 .modal .img img{
     margin: auto auto;
@@ -251,6 +252,15 @@ textarea{
     margin-left: 20px;
     padding: 5px 10px;
     background: var(--s-color-lt);
+}
+#modal-new-meme p{
+    text-align: center;
+}
+p.success{
+    color: rgb(16, 176, 16);
+}
+p.error{
+    color: rgb(200, 24, 24);
 }
 
 footer{
