@@ -33,18 +33,28 @@
     </div>
     <footer>
         <div class="uk-container">
-            <ul>
-                <li>Автор: <a href="https://github.com/chokoladis">chokoladis</a></li>
-                <!-- <li></li> -->
-            </ul>
             <div class="copyright">
-                никакие права не защищены, даже конституцией. 2022-2024
+                никакие права не защищены. 2022-2024
             </div>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.9/dist/js/uikit.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.9/dist/js/uikit-icons.min.js"></script>
-    <script src="/assets/js/jquery.js"></script>
-    <script src="/assets/js/script.js"></script>
+    <script src="/gen.meme/assets/js/jquery.js"></script>
+    <script src="/gen.meme/assets/js/script.js"></script>
+    <!-- Top.Mail.Ru counter -->
+    <script type="text/javascript">
+    var _tmr = window._tmr || (window._tmr = []);
+    _tmr.push({id: "3544855", type: "pageView", start: (new Date()).getTime()});
+    (function (d, w, id) {
+    if (d.getElementById(id)) return;
+    var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+    ts.src = "https://top-fwz1.mail.ru/js/code.js";
+    var f = function () {var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s);};
+    if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+    })(document, window, "tmr-code");
+    </script>
+    <noscript><div><img src="https://top-fwz1.mail.ru/counter?id=3544855;js=na" style="position:absolute;left:-9999px;" alt="Top.Mail.Ru" /></div></noscript>
+    <!-- /Top.Mail.Ru counter -->
 </body>
 </html>

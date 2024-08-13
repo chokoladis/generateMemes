@@ -6,7 +6,7 @@ require_once('config/const.php');
 require_once('functions.php');
 // require_once('classes/Img.php');
 
-require_once($_SERVER['DOCUMENT_ROOT'].'/template/lang/'.LANG.'.php');
+require_once(THEMPLATE_DIR.'/lang/'.LANG.'.php');
 
 spl_autoload_register('autoload');
  

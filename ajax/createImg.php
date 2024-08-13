@@ -1,5 +1,5 @@
 <?php
-    require_once($_SERVER['DOCUMENT_ROOT'].'/lib/preloader.php');
+    require_once($_SERVER['DOCUMENT_ROOT'].'/gen.meme/lib/preloader.php');
 
     use Main\Classes\Img;
     use Main\Classes\Helper;
@@ -24,10 +24,7 @@
 
     foreach( $arText as $key => $text ){
 
-        // var_dump($subDir);
         $arRes = $img->textToImg($text['value'], $opts, $text['width'], $text['heigth'], $subDir, $i);
-        // var_dump($arRes);
-        // exit;
 
         if ($arRes['success']){
             $resImgText = imagecreatefrompng($arRes['temp_name']);
@@ -38,7 +35,8 @@
 
         // функция изменения размера
         $resizeImg = $img->setResizeThumb($arImg, $tempDir.$subDir, $i);
-        $method = $img->getMethod($arImg['ext']);
+        $method = $img->getMethod($resizeImg);
+        
 
         // Альтернатива без ресайза
         $prev = $i - 1;
@@ -46,7 +44,6 @@
         if (file_exists($partMemePath)){ // prev
             $thumb = imagecreatefrompng($partMemePath);
         } else {
-            // $thumb = $method($arImg['src']);
             $thumb = $method($resizeImg);
         }   
 
@@ -55,16 +52,18 @@
         }
         
         if (array_key_last($arText) == $key){
-            $finalPathImg = $subDir.'meme_'.time().'.png';
+            $finalPathImg = $subDir.'meme_'.time().'.webp';
             $place_save = $mainDir.$finalPathImg;
+            $methodSave = 'imagewebp';
         } else {
             $place_save = $tempDir.$subDir.'part_meme_'.$i.'.png';
+            $methodSave = 'imagepng';
         }
-        
-        if (imagepng($thumb, $place_save)){
+
+        if ($methodSave($thumb, $place_save)){
             $response = [
                 'success' => true,
-                'result' => GENERATED_IMG_DIR.$finalPathImg
+                'result' => '/gen.meme/'.GENERATED_IMG_DIR.$finalPathImg
             ];
         } else {
             $response = [
@@ -74,12 +73,10 @@
         }
 
 
-        // imagedestroy($thumb);
-
         $i++;
     }
 
-    Img::clearDir($tempDir.$subDir, true);
+    Img::clearDir($tempDir.$subDir);
 
     header('Content-type: application/json; charset=utf-8');
 

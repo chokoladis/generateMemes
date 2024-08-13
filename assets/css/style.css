@@ -10,8 +10,8 @@
 
     --f-color-lt: rgb(23, 12, 31);
     --s-color-lt: rgb(242, 223, 255);
-    --btn-color-lt: rgba(248, 155, 252, 0.719);
-    --btn-color-hv-lt: rgba(120, 37, 122, 0.719);
+    --btn-color-lt: rgba(66, 0, 117, 0.719);
+    --btn-color-hv-lt: rgba(60, 5, 114, 0.844);
 
     --bg-form-lt: rgb(7, 1, 26);
     --bg-input: rgb(45, 34, 46);
@@ -41,7 +41,7 @@ html.ligth:root{
 }
 @font-face {
     font-family: 'KyivTypeSans';
-    src: url(assets/fonts/KyivTypeSans-VarGX.ttf);
+    src: url(/gen.meme/assets/fonts/KyivTypeSans-VarGX.ttf);
 }
 html,body{
     background: var(--f-color-lt);
@@ -226,6 +226,7 @@ textarea{
 }
 .modal textarea{
     position: absolute;
+    transition: 0s;
 }
 .modal .tools{
     display: flex;
@@ -301,6 +302,21 @@ footer .copyright{
         width: 220px;
         height: 340px;
     }
+
+    .modal .modal_footer, .modal .modal_footer .tools{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+    .modal .modal_footer .tools > *{
+        width: 100%;
+    }
+    .modal_footer .btn{
+        margin: 0;
+    }
+    .modal textarea{
+        width: 100px;
+    }
 }
 @media screen and (max-width:480px) {
     section .img{
@@ -309,5 +325,9 @@ footer .copyright{
     }
     section .img img{
         object-fit: fill;
+    }
+
+    .modal .work_area img{
+        width: 100%;
     }
 }

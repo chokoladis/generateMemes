@@ -6,7 +6,7 @@ class Helper{
 
     public static function searchOriginalImg(){
 
-        $dir = glob($_SERVER['DOCUMENT_ROOT'].ORIGINAL_IMG_DIR.'*');
+        $dir = glob(ROOT_DIR.ORIGINAL_IMG_DIR.'*');
 
         foreach ($dir as $file) {
             $arFiles[] = basename($file);

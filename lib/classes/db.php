@@ -10,7 +10,7 @@ class db {
 
     function __construct(){
 
-        $env = require_once $_SERVER['DOCUMENT_ROOT'].'/private/env.php';
+        $env = require_once ROOT_DIR.'/../../private/gen_meme_env.php';
         $env['db']['port'] = $env['db']['port'] ? ':'.$env['db']['port'] : '';
 
         try {
