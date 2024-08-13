@@ -9,7 +9,7 @@ $action = $_GET['action'];
 switch ($action) {
     case 'loadCustomImg':
 
-        $arCustomImg = $_FILES['file'];
+        $arCustomImg = $_FILES['file'];;
 
         if (empty($arCustomImg)){
             echo jsonResponse(false, errors: ['Вы не загрузили картинку']);

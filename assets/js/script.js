@@ -4,7 +4,7 @@ async function loadCustomImg(modal, file) {
   let data = new FormData()
   data.append('file', file.files[0])
 
-  let response = await fetch('/gen.meme/ajax?action=loadCustomImg', {
+  let response = await fetch('/gen.meme/ajax/?action=loadCustomImg', {
     method: 'POST',
     body: data
   });

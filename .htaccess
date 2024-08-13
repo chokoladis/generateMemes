@@ -8,6 +8,6 @@ php_flag log_errors on
 #AuthUserFile /protected/.htpasswd
 #Require valid-user
 
-RewriteBase /
-RewriteCond %{THE_REQUEST} ^.*/index.php 
-RewriteRule (.*) http://%{HTTP_HOST} [R=301,L]
+#RewriteBase /
+#RewriteCond %{THE_REQUEST} ^.*/index.php 
+#RewriteRule (.*) http://%{HTTP_HOST} [R=301,L]
