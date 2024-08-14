@@ -158,8 +158,12 @@ $(function () {
   });
 
   // change theme
-  $('header .btn').on('click', () => {
+  $('header .btn.js-change-theme').on('click', () => {
     $('html').toggleClass('ligth');
+  });
+
+  $('header .btn.js-set-lang').on('click', function(){    
+    $(this).toggleClass('active');
   });
 
   $('.generate.btn').on('click', function () {

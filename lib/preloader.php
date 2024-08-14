@@ -18,3 +18,5 @@ function autoload($name)
 }
 
 $db = new db();
+
+require_once('handlers.php');

@@ -1,3 +1,7 @@
+<?php
+
+use Main\Classes\Lang;
+?>
         
     <div class="modal" id="modal-create-meme" uk-modal>
         <div class="btn close">
@@ -9,16 +13,14 @@
                 </div>
                 <div class="modal_footer">
                     <div class="tools disable">
-                        <div class="text_color text_white">
-                        </div>
-                        <div class="border">
-                        </div>
+                        <div class="text_color text_white"></div>
+                        <div class="border"></div>
                         <div class="del_all">
-                            Удалить все поля
+                            <?=Lang::getText('modal.delete_all_text')?>
                         </div>
 
                     </div>
-                    <a class="btn generate">Сгенерировать мемчик</a>
+                    <a class="btn generate"><?=Lang::getText('modal.generate')?></a>
                 </div>
             </form>
         
@@ -33,9 +35,7 @@
     </div>
     <footer>
         <div class="uk-container">
-            <div class="copyright">
-                никакие права не защищены. 2022-2024
-            </div>
+            <div class="copyright">© gen.meme, 2022-2024</div>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/uikit@3.15.9/dist/js/uikit.min.js"></script>
