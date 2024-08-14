@@ -34,10 +34,6 @@ class Lang
         if (!empty($_GET['setLang']) && in_array($_GET['setLang'], self::$arLang)){
             return setcookie('LANG', $_GET['setLang'], time()+678400);
         }
-        
-        if (!isset($_COOKIE['LANG']) || !in_array($_COOKIE['LANG'], Lang::$arLang)){
-            return setcookie('LANG', LANG, time()+678400);
-        }
 
     }
 }

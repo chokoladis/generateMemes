@@ -1,6 +1,7 @@
 <?
 
 use Main\Classes\db;
+use Main\Classes\Lang;
 
 require_once('config/const.php');
 require_once('functions.php');
@@ -19,4 +20,5 @@ function autoload($name)
 
 $db = new db();
 
-require_once('handlers.php');
+// require_once('handlers.php');
+Lang::handlerLoad();

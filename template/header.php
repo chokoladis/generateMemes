@@ -2,7 +2,13 @@
 
 use Main\Classes\Lang;
 
-require_once Lang::setLang($_COOKIE['LANG']);
+if (!isset($_COOKIE['LANG']) || !in_array($_COOKIE['LANG'], Lang::$arLang)){
+    setcookie('LANG', LANG, time()+678400);
+}
+
+$lang = isset($_COOKIE['LANG']) ? $_COOKIE['LANG'] : LANG;
+
+require_once Lang::setLang($lang);
 ?>
 <!DOCTYPE html>
 <html lang="<?=$_COOKIE['LANG']?>">
