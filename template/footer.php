@@ -16,7 +16,7 @@ use Main\Classes\Lang;
                         <div class="text_color text_white"></div>
                         <div class="border"></div>
                         <div class="del_all">
-                            <?=Lang::getText('modal.delete_all_text')?>
+                            <?=Lang::getText('modal.detele_all_text')?>
                         </div>
 
                     </div>
