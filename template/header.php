@@ -11,7 +11,7 @@ $lang = isset($_COOKIE['LANG']) ? $_COOKIE['LANG'] : LANG;
 require_once Lang::setLang($lang);
 ?>
 <!DOCTYPE html>
-<html lang="<?= $_COOKIE['LANG'] ?>">
+<html lang="<?= $lang ?>">
 
 <head>
     <meta charset="UTF-8">
