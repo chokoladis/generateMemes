@@ -28,7 +28,7 @@ $sys_messages = [
     'main.not_picture' => 'Нету картинок для мемов',
     'main.btn_create' => 'Делоть меме',
 
-    'modal.detele_all_text' => 'Удалить все поля',
+    'modal.delete_all_text' => 'Удалить все поля',
     'modal.generate' => 'Сгенерировать',
 ];
 
