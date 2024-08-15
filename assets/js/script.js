@@ -162,7 +162,7 @@ $(function () {
     $('html').toggleClass('ligth');
   });
 
-  $('header .btn.js-set-lang').on('click', function(){    
+  $('header .btn.js-set-lang').on('click', function () {
     $(this).toggleClass('active');
   });
 

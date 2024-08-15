@@ -90,6 +90,9 @@ header nav{
     align-items: center;
     justify-content: space-between;
     height: 100px;
+    left: 15px;
+    z-index: 20;
+    top: 60px;
 }
 
 header nav .btn{
@@ -100,8 +103,15 @@ header nav .btn{
     padding: 5px;
     border-radius: 30px;
 }
+html.ligth header nav .js-set-lang{
+    background: rgb(210, 210, 210);
+}
+html.ligth header nav .js-set-lang hr,
 header nav .js-set-lang{
-    background: rgb(221, 129, 0);
+    border: 1px solid;
+}
+header nav .js-set-lang{
+    background: rgb(44, 44, 44);
     overflow: hidden;
 }
 header nav .js-set-lang .front{

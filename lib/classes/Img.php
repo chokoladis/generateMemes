@@ -25,7 +25,7 @@ class Img
         $arText = $_POST['arText'];
 
         if (empty($arImg) || empty($arText)) {
-            return jsonResponse(success: false, errors: ['empty_data' => 'Заполните все данные']);
+            return jsonResponse(success: false, errors: ['empty_data' => Lang::getText('ajax.fill_all_data')]);
         }
 
         $filePath = $_SERVER['DOCUMENT_ROOT'] . $arImg['src'];
@@ -169,17 +169,19 @@ class Img
     public function getMethod(string $filepath = '', string $ext = '')
     {
 
-        if ($filepath
-            && $type = exif_imagetype($filepath)){
+        if (
+            $filepath
+            && $type = exif_imagetype($filepath)
+        ) {
 
             $typeFromArr = self::$imgTypes[$type];
 
             $method = 'imagecreatefrom' . $typeFromArr;
         }
 
-        if (!$filepath && $ext){
-            $method = 'imagecreatefrom'.$ext;
-        }        
+        if (!$filepath && $ext) {
+            $method = 'imagecreatefrom' . $ext;
+        }
 
         if (!function_exists($method)) {
             $method = 'imagecreatefromjpeg';
@@ -221,7 +223,7 @@ class Img
         $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
 
         if (!in_array($ext, self::$imgExt) || $size > self::$maxSizeImg) {
-            $errors = array_merge($errors, ['Загружаемый файл ' . $arCustomImg['name'] . ' имеет не поддерживаемый формат или большой вес']);
+            $errors = array_merge($errors, [$arCustomImg['name'] . ' - ' . Lang::getText('ajax.error.validate_file')]);
         }
 
         if (!empty($errors)) {
@@ -238,15 +240,15 @@ class Img
         $webImgPath = TEMP_IMG_DIR . $subDir . $newName;
         $tempPathFile = $tempDir . $subDir . $newName;
 
-        $fileLog = ROOT_DIR.'/log.php';
+        $fileLog = ROOT_DIR . '/log.php';
 
         if (move_uploaded_file($tmp_name, $tempPathFile)) {
 
             $webpPath = self::compress($webImgPath, $ext);
 
-            $resTempPath = $webpPath ? '/gen.meme'.$webpPath : '/gen.meme'.$webImgPath;
+            $resTempPath = $webpPath ? '/gen.meme' . $webpPath : '/gen.meme' . $webImgPath;
         } else {
-            return jsonResponse(false, errors: ['Ошибка, файл ' . $arCustomImg['name'] . ' не был загружен']);
+            return jsonResponse(false, errors: [$arCustomImg['name'] . ' - ' . Lang::getText('ajax.error.file_not_be_loading')]);
         }
 
         return jsonResponse(result: ['tempPath' => $resTempPath]);
@@ -259,10 +261,10 @@ class Img
 
         try {
 
-            $fullDefaultPath = ROOT_DIR. $filePath;
+            $fullDefaultPath = ROOT_DIR . $filePath;
 
             $webOutputFile = $filePath . '.webp';
-            $outputFile = $fullDefaultPath. '.webp';
+            $outputFile = $fullDefaultPath . '.webp';
 
             if (!file_exists($fullDefaultPath) || $ext === 'webp')
                 return false;

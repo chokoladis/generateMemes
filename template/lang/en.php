@@ -2,6 +2,13 @@
 
 $functions = [
     'ajax.you_not_load_img' => 'You not load img',
+    'ajax.fill_all_data' => 'Fill the all data',
+
+    'ajax.error.write_text_img' => 'Error in write text on image',
+    'ajax.error.copy_text_img' => 'System error in copy imgage',
+    'ajax.error.forming_img' => 'Error forming image',
+    'ajax.error.validate_file' => 'file have not supported format or big size',
+    'ajax.error.file_not_be_loading' => 'file not be loading'
 ];
 
 $sys_messages = [
@@ -20,7 +27,7 @@ $sys_messages = [
 
     'main.not_picture' => 'Not picture for memes',
     'main.btn_create' => 'Makieng meme',
-    
+
 
     'modal.delete_all_text' => 'delete all input',
     'modal.generate' => 'Generate',

@@ -1,6 +1,13 @@
 <?
 $functions = [
+    'ajax.fill_all_data' => 'Заполните все данные',
     'ajax.you_not_load_img' => 'Вы не загрузили картинку',
+    
+    'ajax.error.write_text_img' => 'Ошибка при записи текста на картинку',
+    'ajax.error.copy_text_img' => 'Системная ошибка при копировании картинки',
+    'ajax.error.forming_img' => 'Ошибка формирования картинки',
+    'ajax.error.validate_file' => 'файл имеет не поддерживаемый формат или большой вес',
+    'ajax.error.file_not_be_loading' => 'файл не был загружен'
 ];
 
 $sys_messages = [
