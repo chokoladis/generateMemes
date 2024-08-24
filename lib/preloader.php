@@ -15,10 +15,9 @@ function autoload($name)
 {
     $arPathClass = explode('\\', $name);
     $nameClass = $arPathClass[array_key_last($arPathClass)];
-	require_once 'classes/' . strtolower($nameClass) . '.php';
+	include_once 'classes/' . strtolower($nameClass) . '.php';
+    include_once 'base/' . strtolower($nameClass) . '.php';
 }
-
-$db = new db();
 
 // require_once('handlers.php');
 Lang::handlerLoad();

@@ -309,8 +309,8 @@ textarea{
     display: flex;
     margin-top: 20px;
 }
-.modal_footer .btn{
-    margin-left: 20px;
+.modal_footer .btn {
+    margin-left: auto;
     padding: 5px 10px;
     background: var(--s-color-lt);
 }
