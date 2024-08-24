@@ -15,8 +15,13 @@ function autoload($name)
 {
     $arPathClass = explode('\\', $name);
     $nameClass = $arPathClass[array_key_last($arPathClass)];
-	include_once 'classes/' . strtolower($nameClass) . '.php';
-    include_once 'base/' . strtolower($nameClass) . '.php';
+    
+    if (file_exists(__DIR__.'/classes/' . strtolower($nameClass) . '.php')){
+        include_once 'classes/' . strtolower($nameClass) . '.php';   
+    }
+    if (file_exists(__DIR__.'/base/' . strtolower($nameClass) . '.php')){
+        include_once 'base/' . strtolower($nameClass) . '.php';
+    }
 }
 
 // require_once('handlers.php');
