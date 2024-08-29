@@ -24,6 +24,20 @@ async function loadCustomImg(modal, file) {
   }
 }
 
+async function actionView(filePath) {
+
+  let data = new FormData()
+  data.append('path', filePath)
+
+  let response = await fetch('/gen.meme/ajax/?action=view', {
+    method: 'POST',
+    body: data
+  });
+
+  if (!response.ok)
+    console.error(response.status);
+}
+
 function modal(modal, param) {
 
   $(modal).find('.img').empty();
@@ -33,6 +47,8 @@ function modal(modal, param) {
   } else {
     const imgSrc = $(param).find('img').attr('data-src');
     $(modal).find('.img').append('<img src="' + imgSrc + '"/>');
+    
+    actionView(imgSrc);
   }
 
   UIkit.modal(modal).show();

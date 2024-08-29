@@ -60,7 +60,7 @@ foreach ($arText as $key => $text) {
     if ($methodSave($thumb, $place_save)) {
         $response = [
             'success' => true,
-            'result' => '/gen.meme/' . GENERATED_IMG_DIR . $finalPathImg
+            'result' => '/gen.meme' . GENERATED_IMG_DIR . $finalPathImg
         ];
     } else {
         $response = [

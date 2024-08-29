@@ -2,11 +2,14 @@
 
 namespace Main\Base;
 
+use Exception;
 use PDO;
 
 class Model {
 
-    private static $connect;
+    protected $connect;
+    
+    // private $attributes = [];
 
     function __construct(){
 
@@ -15,11 +18,14 @@ class Model {
 
         try {
             
-            if (!self::$connect) {
-                $strConnect = 'mysql:host'.$env['db']['host'].$env['db']['port'].';dbname='.$env['db']['dbname'].'charset=utf8mb4';
+            if (!$this->connect) {
+                $strConnect = 'mysql:host='.$env['db']['host'].$env['db']['port'].';dbname='.$env['db']['dbname'].';charset=utf8mb4';
 
-                self::$connect = new PDO($strConnect, $env['db']['user'], $env['db']['password']);
+                $this->connect = new PDO($strConnect, $env['db']['user'], $env['db']['password']);
             }
+
+            // $table = $this->getTable();
+            // $this->attributes = $this->connect->query("DESCRIBE $table")->fetchAll(PDO::FETCH_COLUMN);
 
             unset($env);
 
@@ -28,11 +34,28 @@ class Model {
         }
     }
     
-    public function getTableName() : string{
+    public function getTable() : string{
         return 'm_'.strtolower(__CLASS__);
     }
-    
-    protected function findOne(array|int $filter, string $columns = '*', array $order = ['id' => 'DESC'])
+
+    public function __get($key)
+    {
+        return $this->getAttribute($key);
+    }
+
+    public function getAttribute(string $key){
+        if (in_array($key, $this->attributes)){
+
+            $query = $this->connect->prepare("SELECT $key FROM $this->getTable() WHERE `id` = $this->id LIMIT 1");
+            if ($query->execute())
+                return $query->fetch(PDO::FETCH_ASSOC);
+
+        } else {
+            throw new Exception("Error - in table not $key");
+        }
+    }
+
+    public function findOne(array|int $filter, string $columns = '*', array $order = ['id' => 'DESC'], string $type = '')
     {
 
         try {
@@ -47,24 +70,38 @@ class Model {
                 $last = $filter[array_key_last($filter)];
                 foreach ($filter as $key => $value) {
                     $char = $last === $value ? '' : ',';
-                    $strWhere .= "`$key` = :$key $char";
+
+                    if ($type){
+                        if ($type === 'LIKE'){
+                            $operator = "LIKE CONCAT('%', :$key , '%')";
+                        } else {
+                            $operator = "$type :$key";
+                        }
+                    } else {
+                        $operator = "= :$key";
+                    }
+
+                    var_dump($operator);
+
+                    $strWhere .= "`$key` $operator $char";
                 }
             } elseif(is_integer($filter)) {
                 if ($filter > 0){
                     $filter = ['id' => $filter];
                     $strWhere = "`id` = :id";
                 } else {
-                    throw new \Exception("Error query db");
+                    throw new \Exception("Error - select query db");
                 }
             }
 
-            $strWhere = $strWhere ? "WHERE ".$strWhere : '';
+            $strWhere = $strWhere ? "WHERE $strWhere" : '';
 
-            $params = ['table' => $this->getTableName(), 'col' => $columns];
+            $params = ['t' => $this->getTable(), 'col' => $columns];
             if (!empty($filter)){
                 $params = array_merge($params, $filter);
             }
 
+            $order = [];
             if (!empty($order)){
                 
                 $last = $order[array_key_last($order)];
@@ -77,8 +114,10 @@ class Model {
 
                 $params = array_merge($params, $optsOrder);
             }
+            $strOrder = $strOrder ? "ORDER BY $strOrder" : '';
             
-            $query = self::$connect->prepare("SELECT :col FROM :table $strWhere LIMIT 1 ORDER BY $strOrder");
+            var_dump($this->connect);
+            $query = $this->connect->prepare("SELECT `:col` FROM `:t` $strWhere LIMIT 1 $strOrder");
             if ($query->execute($params)){
                 return $query->fetch(PDO::FETCH_ASSOC);
             } else {
@@ -90,7 +129,7 @@ class Model {
         }
     }
     
-    protected function find(array $filter, string $columns = '*', int $limit = 10 ,$order = ['id' => 'DESC'])
+    public function find(array $filter, string $columns = '*', int $limit = 10 ,$order = ['id' => 'DESC'])
     {
         try {
 
@@ -110,7 +149,7 @@ class Model {
                 $strWhere = "WHERE ".$strWhere;
             }
 
-            $params = ['table' => $this->getTableName(), 'col' => $columns];
+            $params = ['table' => $this->getTable(), 'col' => $columns];
             if (!empty($filter)){
                 $params = array_merge($params, $filter);
             }
@@ -131,7 +170,7 @@ class Model {
             $limit = $limit < 1 ? 1 : $limit;
             $limit = $limit > 100 ? 100 : $limit;
             
-            $query = self::$connect->prepare("SELECT :col FROM :table $strWhere LIMIT $limit ORDER BY $strOrder");
+            $query = $this->connect->prepare("SELECT :col FROM :table $strWhere LIMIT $limit ORDER BY $strOrder");
             if ($query->execute($params)){
                 return $query->fetch(PDO::FETCH_ASSOC);
             } else {
@@ -143,14 +182,14 @@ class Model {
         }
     }
     
-    protected function create(array $fileds) {
+    public function create(array $fileds) {
 
-        $table = $this->getTableName();
+        $table = $this->getTable();
 
         try {
 
             if (empty($fileds))
-                throw new \Exception("Error fields empty");
+                throw new \Exception("Error - array fields is empty");
 
             $strValues = "";
 
@@ -159,9 +198,9 @@ class Model {
                 $params[$key] = $value;
             }
 
-            $query = self::$connect->prepare("INSERT INTO `$table` SET $strValues");
+            $query = $this->connect->prepare("INSERT INTO `$table` SET $strValues");
             if ($query->execute($params)){
-                return intval(self::$connect->lastInsertId());
+                return intval($this->connect->lastInsertId());
             } else {
                 throw new \Exception("Error - ".$query->errorInfo());
             }
@@ -172,27 +211,33 @@ class Model {
 
     }
 
-    protected function update(array $fileds, array $filter) {
+    public function update(array $fileds, array $filter) {
 
-        $table = $this->getTableName();
+        $table = $this->getTable();
 
         try {
 
-            if (empty($fileds))
-                throw new \Exception("Error fields empty");
+            if (empty($fileds) || empty($filter))
+                throw new \Exception("Error - important array fields or filter is empty");
 
-            $strValues = "";
+            $strValues = $strFilter = "";
 
             foreach ($fileds as $key => $value) {
                 $strValues .= "`$key` = :$key, ";
                 $params[$key] = $value;
             }
-            // filter todo
-            $strFilter = '';
 
-            $query = self::$connect->prepare("UPDATE `$table` SET $strValues WHERE $strFilter");
+            $last = $filter[array_key_last($filter)];
+
+            foreach ($filter as $key => $value) {
+                $char = $last === $value ? '' : ',';
+                $strFilter .= "`$key` = :filter_$key";
+                $params['filter_'.$key] = $value;
+            }
+
+            $query = $this->connect->prepare("UPDATE `$table` SET $strValues WHERE $strFilter LIMIT 1");
             if ($query->execute($params)){
-                return intval(self::$connect->lastInsertId());
+                return intval($this->connect->lastInsertId());
             } else {
                 throw new \Exception("Error - ".$query->errorInfo());
             }
@@ -203,25 +248,18 @@ class Model {
 
     }
 
-    protected function delete(array $fileds) {
+    public function delete(int $id) {
 
-        $table = $this->getTableName();
+        $table = $this->getTable();
 
         try {
 
-            if (empty($fileds))
-                throw new \Exception("Error fields empty");
+            if ($id < 1)
+                throw new \Exception("Error - param id is should be bigger 0");
 
-            $strValues = "";
-
-            foreach ($fileds as $key => $value) {
-                $strValues .= "`$key` = :$key, ";
-                $params[$key] = $value;
-            }
-
-            $query = self::$connect->prepare("INSERT INTO `$table` SET $strValues");
-            if ($query->execute($params)){
-                return intval(self::$connect->lastInsertId());
+            $query = $this->connect->prepare("DELETE FROM `$table` WHERE `id` = :id LIMIT 1");
+            if ($query->execute(['id' => $id])){
+                return true;
             } else {
                 throw new \Exception("Error - ".$query->errorInfo());
             }

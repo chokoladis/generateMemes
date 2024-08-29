@@ -8,7 +8,9 @@ $functions = [
     'ajax.error.copy_text_img' => 'System error in copy imgage',
     'ajax.error.forming_img' => 'Error forming image',
     'ajax.error.validate_file' => 'file have not supported format or big size',
-    'ajax.error.file_not_be_loading' => 'file not be loading'
+    'ajax.error.file_not_be_loading' => 'file not be loading',
+    'ajax.id_must_be_bigger' => 'id must have biger 0',
+    'ajax.not_all_params_set' => 'no all params sets',
 ];
 
 $sys_messages = [

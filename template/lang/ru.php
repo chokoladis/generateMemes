@@ -7,7 +7,9 @@ $functions = [
     'ajax.error.copy_text_img' => 'Системная ошибка при копировании картинки',
     'ajax.error.forming_img' => 'Ошибка формирования картинки',
     'ajax.error.validate_file' => 'файл имеет не поддерживаемый формат или большой вес',
-    'ajax.error.file_not_be_loading' => 'файл не был загружен'
+    'ajax.error.file_not_be_loading' => 'файл не был загружен',
+    'ajax.id_must_be_bigger' => 'id должен быть больше 0',
+    'ajax.not_all_params_set' => 'Не все параметры были заданы',
 ];
 
 $sys_messages = [

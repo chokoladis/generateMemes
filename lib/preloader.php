@@ -22,7 +22,15 @@ function autoload($name)
     if (file_exists(__DIR__.'/base/' . strtolower($nameClass) . '.php')){
         include_once 'base/' . strtolower($nameClass) . '.php';
     }
+    if (file_exists(__DIR__.'/models/' . strtolower($nameClass) . '.php')){
+        include_once 'models/' . strtolower($nameClass) . '.php';
+    }
+    if (file_exists(__DIR__.'/controllers/' . strtolower($nameClass) . '.php')){
+        include_once 'controllers/' . strtolower($nameClass) . '.php';
+    }
 }
 
 // require_once('handlers.php');
 Lang::handlerLoad();
+
+session_start();
